@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Misaf\VendraBlogApi\JsonApi\V1\BlogPostCategories;
+
+use LaravelJsonApi\Eloquent\Fields\ArrayHash;
+use LaravelJsonApi\Eloquent\Fields\Boolean;
+use LaravelJsonApi\Eloquent\Fields\DateTime;
+use LaravelJsonApi\Eloquent\Fields\ID;
+use LaravelJsonApi\Eloquent\Fields\Number;
+use LaravelJsonApi\Eloquent\Fields\Relations\BelongsToMany;
+use LaravelJsonApi\Eloquent\Fields\Relations\HasMany;
+use LaravelJsonApi\Eloquent\Filters\Has;
+use LaravelJsonApi\Eloquent\Filters\OnlyTrashed;
+use LaravelJsonApi\Eloquent\Filters\Where;
+use LaravelJsonApi\Eloquent\Filters\WhereDoesntHave;
+use LaravelJsonApi\Eloquent\Filters\WhereHas;
+use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
+use LaravelJsonApi\Eloquent\Filters\WhereIdNotIn;
+use LaravelJsonApi\Eloquent\Filters\WithTrashed;
+use LaravelJsonApi\Eloquent\Pagination\PagePagination;
+use LaravelJsonApi\Eloquent\Schema;
+use Misaf\VendraBlog\Models\BlogPostCategory;
+
+final class BlogPostCategorySchema extends Schema
+{
+    public static string $model = BlogPostCategory::class;
+
+    protected ?array $defaultPagination = ['number' => 1];
+
+    public function fields(): array
+    {
+        return [
+            ID::make(),
+            ArrayHash::make('name'),
+            ArrayHash::make('description'),
+            ArrayHash::make('slug'),
+            Number::make('position')
+                ->sortable()
+                ->readOnly(),
+            Boolean::make('status'),
+            DateTime::make('created_at')
+                ->sortable()
+                ->readOnly(),
+            DateTime::make('updated_at')
+                ->sortable()
+                ->readOnly(),
+            HasMany::make('blogPosts')
+                ->readOnly(),
+            BelongsToMany::make('multimedia')
+                ->readOnly(),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            WhereIdIn::make($this),
+            WhereIdNotIn::make($this, 'exclude'),
+            Where::make('slug', 'slug->fa')
+                ->singular(),
+            Where::make('status')
+                ->asBoolean(),
+            Has::make($this, 'blogPosts', 'has-blog-posts'),
+            WhereHas::make($this, 'blogPosts', 'with-blog-posts'),
+            WhereDoesntHave::make($this, 'blogPosts', 'without-blog-posts'),
+            Has::make($this, 'multimedia', 'has-multimedia'),
+            WhereHas::make($this, 'multimedia', 'with-multimedia'),
+            WhereDoesntHave::make($this, 'multimedia', 'without-multimedia'),
+            WithTrashed::make('with-trashed'),
+            OnlyTrashed::make('trashed'),
+        ];
+    }
+
+    public function includePaths(): iterable
+    {
+        return [
+            'blogPosts',
+            'multimedia',
+        ];
+    }
+
+    public function pagination(): PagePagination
+    {
+        return PagePagination::make();
+    }
+}
