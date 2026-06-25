@@ -12,15 +12,11 @@ use LaravelJsonApi\Eloquent\Fields\Number;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsTo;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsToMany;
 use LaravelJsonApi\Eloquent\Filters\Has;
-use LaravelJsonApi\Eloquent\Filters\OnlyTrashed;
 use LaravelJsonApi\Eloquent\Filters\Where;
 use LaravelJsonApi\Eloquent\Filters\WhereDoesntHave;
 use LaravelJsonApi\Eloquent\Filters\WhereHas;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Filters\WhereIdNotIn;
-use LaravelJsonApi\Eloquent\Filters\WhereIn;
-use LaravelJsonApi\Eloquent\Filters\WhereNotIn;
-use LaravelJsonApi\Eloquent\Filters\WithTrashed;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
 use Misaf\VendraApi\JsonApi\Sorting\RandomPositionSort;
@@ -36,21 +32,31 @@ final class BlogPostSchema extends Schema
     {
         return [
             ID::make(),
+
             ArrayHash::make('name'),
+
             ArrayHash::make('description'),
+
             ArrayHash::make('slug'),
+
             Number::make('position')
                 ->sortable()
                 ->readOnly(),
-            Boolean::make('status'),
+
+            Boolean::make('status')
+                ->sortable(),
+
             DateTime::make('created_at')
                 ->sortable()
                 ->readOnly(),
+
             DateTime::make('updated_at')
                 ->sortable()
                 ->readOnly(),
+
             BelongsTo::make('blogPostCategory')
                 ->readOnly(),
+
             BelongsToMany::make('multimedia')
                 ->readOnly(),
         ];
@@ -59,21 +65,40 @@ final class BlogPostSchema extends Schema
     public function filters(): array
     {
         return [
+            ...$this->getPrimaryKeyFilters(),
+            ...$this->getAttributeFilters(),
+            ...$this->getRelationFilters(),
+        ];
+    }
+
+    private function getPrimaryKeyFilters(): array
+    {
+        return [
             WhereIdIn::make($this),
             WhereIdNotIn::make($this, 'exclude'),
-            Where::make('blog-post-category', 'blog_post_category_id'),
-            Where::make('slug', 'slug->fa')
+        ];
+    }
+
+    private function getAttributeFilters(): array
+    {
+        return [
+            Where::make('slug')
                 ->singular(),
-            Where::make('status')->asBoolean(),
+
+            Where::make('status')
+                ->asBoolean(),
+        ];
+    }
+
+    private function getRelationFilters(): array
+    {
+        return [
             WhereHas::make($this, 'blogPostCategory', 'with-blog-post-category'),
             WhereDoesntHave::make($this, 'blogPostCategory', 'without-blog-post-category'),
-            WhereIn::make('in-blog-post-category', 'blog_post_category_id'),
-            WhereNotIn::make('not-in-blog-post-category', 'blog_post_category_id'),
+
             Has::make($this, 'multimedia', 'has-multimedia'),
             WhereHas::make($this, 'multimedia', 'with-multimedia'),
             WhereDoesntHave::make($this, 'multimedia', 'without-multimedia'),
-            WithTrashed::make('with-trashed'),
-            OnlyTrashed::make('trashed'),
         ];
     }
 

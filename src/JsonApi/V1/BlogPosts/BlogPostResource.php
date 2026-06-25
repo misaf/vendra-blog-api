@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace Misaf\VendraBlogApi\JsonApi\V1\BlogPosts;
 
-use App\Traits\LocalizableAttributesTrait;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 final class BlogPostResource extends JsonApiResource
 {
-    use LocalizableAttributesTrait;
-
     public function attributes($request): iterable
     {
         return [
-            'name'             => $this->name,
-            'description'      => $this->description,
-            'slug'             => $this->slug,
-            'position'         => $this->position,
-            'status'           => $this->status,
-            'created_at'       => $this->created_at,
-            'updated_at'       => $this->updated_at,
-            // 'image' => $this->getFirstMedia()->getSrcset(),
+            'name'        => $this->name,
+            'description' => $this->description,
+            'slug'        => $this->slug,
+            'position'    => $this->position,
+            'status'      => $this->status,
+            'created_at'  => $this->created_at,
+            'updated_at'  => $this->updated_at,
         ];
     }
 

@@ -12,15 +12,14 @@ use LaravelJsonApi\Eloquent\Fields\Number;
 use LaravelJsonApi\Eloquent\Fields\Relations\BelongsToMany;
 use LaravelJsonApi\Eloquent\Fields\Relations\HasMany;
 use LaravelJsonApi\Eloquent\Filters\Has;
-use LaravelJsonApi\Eloquent\Filters\OnlyTrashed;
 use LaravelJsonApi\Eloquent\Filters\Where;
 use LaravelJsonApi\Eloquent\Filters\WhereDoesntHave;
 use LaravelJsonApi\Eloquent\Filters\WhereHas;
 use LaravelJsonApi\Eloquent\Filters\WhereIdIn;
 use LaravelJsonApi\Eloquent\Filters\WhereIdNotIn;
-use LaravelJsonApi\Eloquent\Filters\WithTrashed;
 use LaravelJsonApi\Eloquent\Pagination\PagePagination;
 use LaravelJsonApi\Eloquent\Schema;
+use Misaf\VendraApi\JsonApi\Sorting\RandomPositionSort;
 use Misaf\VendraBlog\Models\BlogPostCategory;
 
 final class BlogPostCategorySchema extends Schema
@@ -33,21 +32,31 @@ final class BlogPostCategorySchema extends Schema
     {
         return [
             ID::make(),
+
             ArrayHash::make('name'),
+
             ArrayHash::make('description'),
+
             ArrayHash::make('slug'),
+
             Number::make('position')
                 ->sortable()
                 ->readOnly(),
-            Boolean::make('status'),
+
+            Boolean::make('status')
+                ->sortable(),
+
             DateTime::make('created_at')
                 ->sortable()
                 ->readOnly(),
+
             DateTime::make('updated_at')
                 ->sortable()
                 ->readOnly(),
+
             HasMany::make('blogPosts')
                 ->readOnly(),
+
             BelongsToMany::make('multimedia')
                 ->readOnly(),
         ];
@@ -56,20 +65,41 @@ final class BlogPostCategorySchema extends Schema
     public function filters(): array
     {
         return [
+            ...$this->getPrimaryKeyFilters(),
+            ...$this->getAttributeFilters(),
+            ...$this->getRelationFilters(),
+        ];
+    }
+
+    private function getPrimaryKeyFilters(): array
+    {
+        return [
             WhereIdIn::make($this),
             WhereIdNotIn::make($this, 'exclude'),
-            Where::make('slug', 'slug->fa')
+        ];
+    }
+
+    private function getAttributeFilters(): array
+    {
+        return [
+            Where::make('slug')
                 ->singular(),
+
             Where::make('status')
                 ->asBoolean(),
+        ];
+    }
+
+    private function getRelationFilters(): array
+    {
+        return [
             Has::make($this, 'blogPosts', 'has-blog-posts'),
             WhereHas::make($this, 'blogPosts', 'with-blog-posts'),
             WhereDoesntHave::make($this, 'blogPosts', 'without-blog-posts'),
+
             Has::make($this, 'multimedia', 'has-multimedia'),
             WhereHas::make($this, 'multimedia', 'with-multimedia'),
             WhereDoesntHave::make($this, 'multimedia', 'without-multimedia'),
-            WithTrashed::make('with-trashed'),
-            OnlyTrashed::make('trashed'),
         ];
     }
 
@@ -84,5 +114,12 @@ final class BlogPostCategorySchema extends Schema
     public function pagination(): PagePagination
     {
         return PagePagination::make();
+    }
+
+    public function sortables(): iterable
+    {
+        return [
+            RandomPositionSort::make('random-position'),
+        ];
     }
 }

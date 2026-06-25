@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Misaf\VendraBlogApi\JsonApi\V1\BlogPostCategories;
 
-use App\Traits\LocalizableAttributesTrait;
 use LaravelJsonApi\Core\Resources\JsonApiResource;
 
 final class BlogPostCategoryResource extends JsonApiResource
 {
-    use LocalizableAttributesTrait;
-
     public function attributes($request): iterable
     {
         return [
