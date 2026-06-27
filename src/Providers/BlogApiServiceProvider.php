@@ -12,7 +12,8 @@ final class BlogApiServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        $package->name('vendra-blog-api');
+        $package->name('vendra-blog-api')
+            ->hasRoute('api');
     }
 
     public function packageBooted(): void
