@@ -11,7 +11,7 @@ use Misaf\VendraMultimediaApi\JsonApi\V1\Multimedia\MultimediaSchema;
 
 final class Server extends BaseServer
 {
-    protected string $baseUri = '/api/v1';
+    protected string $baseUri = '/v1';
 
     public function authorizable(): bool
     {
