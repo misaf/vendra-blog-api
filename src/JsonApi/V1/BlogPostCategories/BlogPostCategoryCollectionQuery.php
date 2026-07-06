@@ -10,7 +10,7 @@ use LaravelJsonApi\Validation\Rule as JsonApiRule;
 final class BlogPostCategoryCollectionQuery extends ResourceQuery
 {
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
