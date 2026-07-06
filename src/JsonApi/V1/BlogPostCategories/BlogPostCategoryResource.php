@@ -5,9 +5,16 @@ declare(strict_types=1);
 namespace Misaf\VendraBlogApi\JsonApi\V1\BlogPostCategories;
 
 use LaravelJsonApi\Core\Resources\JsonApiResource;
+use Misaf\VendraBlog\Models\BlogPostCategory;
 
+/**
+ * @mixin BlogPostCategory
+ */
 final class BlogPostCategoryResource extends JsonApiResource
 {
+    /**
+     * @return iterable<string, mixed>
+     */
     public function attributes($request): iterable
     {
         return [
@@ -21,6 +28,9 @@ final class BlogPostCategoryResource extends JsonApiResource
         ];
     }
 
+    /**
+     * @return iterable<int, mixed>
+     */
     public function relationships($request): iterable
     {
         return [
