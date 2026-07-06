@@ -3,9 +3,6 @@
 declare(strict_types=1);
 
 use Misaf\VendraBlogApi\JsonApi\V1\Server;
-use Misaf\VendraBlogApi\Tests\TestCase;
-
-pest()->extend(TestCase::class);
 
 it('uses the registered blog api base uri', function (): void {
     $properties = (new ReflectionClass(Server::class))->getDefaultProperties();

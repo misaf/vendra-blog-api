@@ -3,9 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use Misaf\VendraBlogApi\Tests\TestCase;
-
-pest()->extend(TestCase::class);
 
 it('registers blog api read routes', function (): void {
     expect(Route::has('vendra-blog.blog-posts.index'))->toBeTrue()
