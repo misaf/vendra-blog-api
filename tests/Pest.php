@@ -1,5 +1,6 @@
 <?php
 
 declare(strict_types=1);
+use Misaf\VendraBlogApi\Tests\TestCase;
 
-uses(Misaf\VendraBlogApi\Tests\TestCase::class)->in('Feature', 'Unit');
+uses(TestCase::class)->in('Feature', 'Unit');

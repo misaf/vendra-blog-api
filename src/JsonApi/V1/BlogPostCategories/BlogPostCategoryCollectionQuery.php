@@ -25,25 +25,12 @@ final class BlogPostCategoryCollectionQuery extends ResourceQuery
                 'array',
                 JsonApiRule::filter(),
             ],
-            'filter.id'                   => 'array',
-            'filter.id.*'                 => 'integer',
-            'filter.exclude'              => 'array',
-            'filter.exclude.*'            => 'integer',
-            'filter.name'                 => 'string',
-            'filter.slug'                 => 'string',
-            'filter.status'               => 'boolean',
+            ...$this->sharedFilterRules(),
             'filter.has-blog-posts'       => 'boolean',
             'filter.with-blog-posts'      => 'array',
             'filter.with-blog-posts.*'    => 'string',
             'filter.without-blog-posts'   => 'array',
             'filter.without-blog-posts.*' => 'string',
-            'filter.has-multimedia'       => 'boolean',
-            'filter.with-multimedia'      => 'array',
-            'filter.with-multimedia.*'    => 'string',
-            'filter.without-multimedia'   => 'array',
-            'filter.without-multimedia.*' => 'string',
-            'filter.with-trashed'         => 'boolean',
-            'filter.only-trashed'         => 'boolean',
             'include'                     => [
                 'nullable',
                 'string',
@@ -66,6 +53,29 @@ final class BlogPostCategoryCollectionQuery extends ResourceQuery
                 'string',
                 JsonApiRule::countable(),
             ],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function sharedFilterRules(): array
+    {
+        return [
+            'filter.id'                   => 'array',
+            'filter.id.*'                 => 'integer',
+            'filter.exclude'              => 'array',
+            'filter.exclude.*'            => 'integer',
+            'filter.name'                 => 'string',
+            'filter.slug'                 => 'string',
+            'filter.status'               => 'boolean',
+            'filter.has-multimedia'       => 'boolean',
+            'filter.with-multimedia'      => 'array',
+            'filter.with-multimedia.*'    => 'string',
+            'filter.without-multimedia'   => 'array',
+            'filter.without-multimedia.*' => 'string',
+            'filter.with-trashed'         => 'boolean',
+            'filter.only-trashed'         => 'boolean',
         ];
     }
 }

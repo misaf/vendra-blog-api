@@ -15,6 +15,7 @@ use Misaf\VendraMultimediaApi\JsonApi\V1\Server as VendraMultimediaServer;
 use Misaf\VendraMultimediaApi\Providers\MultimediaApiServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Override;
+use Spatie\Activitylog\Models\Activity;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -35,7 +36,7 @@ abstract class TestCase extends OrchestraTestCase
             'default_log_name'                    => 'default',
             'default_auth_driver'                 => null,
             'subject_returns_soft_deleted_models' => false,
-            'activity_model'                      => \Spatie\Activitylog\Models\Activity::class,
+            'activity_model'                      => Activity::class,
             'table_name'                          => 'activity_log',
             'database_connection'                 => null,
         ]);
