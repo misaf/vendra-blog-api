@@ -10,8 +10,6 @@ use LaravelJsonApi\Validation\Rule as JsonApiRule;
 final class BlogPostQuery extends ResourceQuery
 {
     /**
-     * Get the validation rules that apply to the request query parameters.
-     *
      * @return array<string, mixed>
      */
     public function rules(): array

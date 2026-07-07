@@ -72,6 +72,17 @@ final class BlogPostSchema extends Schema
     }
 
     /**
+     * @return iterable<int, string>
+     */
+    public function includePaths(): iterable
+    {
+        return [
+            'blogPostCategory',
+            'multimedia',
+        ];
+    }
+
+    /**
      * @return array<int, Filter>
      */
     public function filters(): array
@@ -79,7 +90,37 @@ final class BlogPostSchema extends Schema
         return [
             ...$this->getPrimaryKeyFilters(),
             ...$this->getAttributeFilters(),
-            ...$this->getRelationFilters(),
+            WhereHas::make($this, 'blogPostCategory', 'with-blog-post-category'),
+            WhereDoesntHave::make($this, 'blogPostCategory', 'without-blog-post-category'),
+
+            ...$this->getMultimediaFilters(),
+        ];
+    }
+
+    public function pagination(): PagePagination
+    {
+        return PagePagination::make();
+    }
+
+    /**
+     * @return iterable<int, Sortable>
+     */
+    public function sortables(): iterable
+    {
+        return [
+            RandomPositionSort::make('random-position'),
+        ];
+    }
+
+    /**
+     * @return array<int, Filter>
+     */
+    private function getMultimediaFilters(): array
+    {
+        return [
+            Has::make($this, 'multimedia', 'has-multimedia'),
+            WhereHas::make($this, 'multimedia', 'with-multimedia'),
+            WhereDoesntHave::make($this, 'multimedia', 'without-multimedia'),
         ];
     }
 
@@ -112,47 +153,6 @@ final class BlogPostSchema extends Schema
 
             Where::make('status')
                 ->asBoolean(),
-        ];
-    }
-
-    /**
-     * @return array<int, Filter>
-     */
-    private function getRelationFilters(): array
-    {
-        return [
-            WhereHas::make($this, 'blogPostCategory', 'with-blog-post-category'),
-            WhereDoesntHave::make($this, 'blogPostCategory', 'without-blog-post-category'),
-
-            Has::make($this, 'multimedia', 'has-multimedia'),
-            WhereHas::make($this, 'multimedia', 'with-multimedia'),
-            WhereDoesntHave::make($this, 'multimedia', 'without-multimedia'),
-        ];
-    }
-
-    /**
-     * @return iterable<int, string>
-     */
-    public function includePaths(): iterable
-    {
-        return [
-            'blogPostCategory',
-            'multimedia',
-        ];
-    }
-
-    public function pagination(): PagePagination
-    {
-        return PagePagination::make();
-    }
-
-    /**
-     * @return iterable<int, Sortable>
-     */
-    public function sortables(): iterable
-    {
-        return [
-            RandomPositionSort::make('random-position'),
         ];
     }
 }
