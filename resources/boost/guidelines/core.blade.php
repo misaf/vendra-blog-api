@@ -4,7 +4,7 @@ The `misaf/vendra-blog-api` package exposes `misaf/vendra-blog` domain models th
 
 ### Standards
 
-- Keep API code inside `app-modules/vendra-blog-api` using the `Misaf\VendraBlogApi` namespace.
+- Keep API code inside `packages/vendra-blog-api` using the `Misaf\VendraBlogApi` namespace.
 - Use this package for JSON:API servers, schemas, resources, query validators, API routes, service providers, and API tests.
 - Import domain models from `Misaf\VendraBlog`; do not duplicate persistence or domain behavior in the API module.
 - Keep Filament/admin UI in `misaf/vendra-blog`.
